@@ -1,13 +1,12 @@
 import numpy as np
 
-# Система нелінійних рівнянь (Варіант 17)
 def f1(x1, x2):
     return x1 / (x1**2 + x2**2) - 0.4 - x1
 
 def f2(x1, x2):
     return 1.4 - x2 / (x1**2 + x2**2) - x2
 
-# Приведення системи до вигляду X = G(X) для простої ітерації
+
 def g1(x1, x2):
     return x1 / (x1**2 + x2**2) - 0.4
 
@@ -25,19 +24,16 @@ def epsilon_algorithm(x0, eps_percent=1e-5, q=2, p=2, max_stages=100):
     x = x0.copy()
     
     for stage in range(1, max_stages + 1):
-        # Початкові ітерації
         for _ in range(p):
             x = G(x)
             
         e[0, 1] = x.copy()
         cond = False
         
-        # Генерація S-послідовності
         for j in range(2 * q):
             x = G(x)
             e[j + 1, 1] = x.copy()
             
-            # Перевірка умови збіжності на першому кроці
             if j == 0:
                 rel_err = np.abs((e[1, 1] - e[0, 1]) / e[1, 1]) * 100
                 if np.any(rel_err > eps_percent):
@@ -46,12 +42,10 @@ def epsilon_algorithm(x0, eps_percent=1e-5, q=2, p=2, max_stages=100):
         cur_err = np.max(rel_err)
         print(f"Стадія: {stage} | x1 = {x[0]:.6f}, x2 = {x[1]:.6f} | Похибка (%) = {cur_err:.6e}")
         
-        # Якщо похибка менша за задану - завершуємо
         if not cond:
             print(f"Збіжність досягнута на стадії {stage}")
             return e[0, 1]
             
-        # Екстраполяція (обертання Самельсона)
         for k in range(1, n):
             for j in range(n - k):
                 V = e[j + 1, k] - e[j, k]
@@ -62,9 +56,9 @@ def epsilon_algorithm(x0, eps_percent=1e-5, q=2, p=2, max_stages=100):
     print("Кількість стадій більша за", max_stages)
     return x
 
-# Початкові дані
+
 x_start = np.array([0.5, 0.5])
-epsilon = 1e-5  # відносна похибка у відсотках (10^-5 %)
+epsilon = 1e-5  
 
 print("Початкове наближення:", x_start)
 print("Задана похибка:", epsilon, "%")

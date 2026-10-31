@@ -16,10 +16,12 @@ integral = 0
 fa = f(a)
 fb = f(b)
 
+#непарні числа
 for i in range(1, m + 1):
     x = a + (2 * i - 1) * h
     integral = integral + 4 * f(x)
 
+#парні числа
 for i in range(1, m):
     x = a + 2 * i * h
     integral = integral + 2 * f(x)
